@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Produit en inventaire
+model Product {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  brand       String?
+  size        String?
+  category    String?
+  condition   String?  // "Neuf", "Très bon état", "Bon état", etc.
+  imageUrl    String?
+  vintedUrl   String?  // Lien listing Vinted
+
+  purchasePrice  Float    // Prix d'achat
+  purchaseDate   DateTime // Date d'achat
+  purchaseSource String?  // Où acheté (Vinted, Leboncoin, friperie, etc.)
+
+  listingPrice   Float?   // Prix de mise en vente
+  listedAt       DateTime? // Date de mise en vente
+
+  status      ProductStatus @default(IN_STOCK)
+
+  sale        Sale?
+  expenses    Expense[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([brand])
+  @@index([category])
+}
+
+enum ProductStatus {
+  IN_STOCK     // En stock
+  LISTED       // En vente sur Vinted
+  SOLD         // Vendu
+  RETURNED     // Retourné
+  DONATED      // Donné
+}
+
+// Vente réalisée
+model Sale {
+  id            String   @id @default(cuid())
+  productId     String   @unique
+  product       Product  @relation(fields: [productId], references: [id])
+
+  salePrice     Float    // Prix de vente final
+  saleDate      DateTime // Date de vente
+  platform      String   @default("Vinted") // Plateforme de vente
+  buyerUsername  String?
+
+  shippingCost  Float    @default(0) // Frais de port (payés par vendeur)
+  platformFee   Float    @default(0) // Commission Vinted
+  
+  // Calculés
+  margin        Float    // Marge nette = salePrice - purchasePrice - shippingCost - platformFee - expenses
+  marginPercent Float    // Marge en %
+
+  createdAt     DateTime @default(now())
+
+  @@index([saleDate])
+  @@index([platform])
+}
+
+// Frais additionnels liés à un produit
+model Expense {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+
+  label       String   // "Pressing", "Réparation", "Emballage", etc.
+  amount      Float
+  date        DateTime
+
+  createdAt   DateTime @default(now())
+}
+
+// Alertes deals Vinted
+model DealAlert {
+  id          String   @id @default(cuid())
+  query       String   // Recherche Vinted
+  brand       String?
+  maxPrice    Float?
+  minDiscount Float?   // % de réduction min
+  sizes       String?  // Tailles séparées par virgule
+  active      Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Historique scraping Vinted
+model ScrapedListing {
+  id          String   @id @default(cuid())
+  vintedId    String   @unique
+  title       String
+  price       Float
+  brand       String?
+  size        String?
+  imageUrl    String?
+  url         String
+  sellerName  String?
+
+  alertId     String?  // Lié à quelle alerte
+  notified    Boolean  @default(false)
+
+  scrapedAt   DateTime @default(now())
+
+  @@index([vintedId])
+  @@index([brand])
+}
