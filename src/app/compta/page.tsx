@@ -32,22 +32,22 @@ function handleExportPDF() {
 export default function ComptaPage() {
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Comptabilité</h1>
           <p className="text-sm text-gray-500 mt-1">Bilan financier et exports</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+            className="flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px]"
           >
             <FileSpreadsheet className="w-4 h-4" />
             Export CSV
           </button>
           <button
             onClick={handleExportPDF}
-            className="flex items-center gap-2 bg-vinted hover:bg-vinted-dark text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+            className="flex items-center justify-center gap-2 bg-vinted hover:bg-vinted-dark text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px]"
           >
             <FileText className="w-4 h-4" />
             Export PDF
@@ -56,7 +56,7 @@ export default function ComptaPage() {
       </div>
 
       {/* P&L Summary */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6 mb-6">
         <h3 className="text-sm font-semibold text-gray-700 mb-4">Compte de résultat</h3>
         <div className="space-y-3">
           <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -79,7 +79,7 @@ export default function ComptaPage() {
             <span className="text-sm text-gray-600">Dépenses additionnelles</span>
             <span className="text-sm font-semibold text-red-500">-{formatCurrency(totalDepenses)}</span>
           </div>
-          <div className="flex justify-between items-center py-3 bg-gray-50 -mx-6 px-6 rounded-lg mt-2">
+          <div className="flex justify-between items-center py-3 bg-gray-50 -mx-4 md:-mx-6 px-4 md:px-6 rounded-lg mt-2">
             <span className="text-sm font-bold text-gray-900">Bénéfice net</span>
             <span className={`text-lg font-bold ${beneficeNet >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {formatCurrency(beneficeNet)}
@@ -90,7 +90,7 @@ export default function ComptaPage() {
 
       {/* Expenses Detail */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">Détail des dépenses annexes</h3>
           <div className="space-y-2">
             {mockExpenses.map(e => (
@@ -109,7 +109,7 @@ export default function ComptaPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">Répartition des charges</h3>
           <div className="space-y-4">
             {[

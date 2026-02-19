@@ -36,6 +36,35 @@ const columns = [
   ), className: 'text-right' },
 ];
 
+function SaleCard({ sale }: { sale: Sale }) {
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <p className="text-sm font-semibold text-gray-900">{sale.productTitle}</p>
+          <p className="text-xs text-gray-400">{sale.brand} • @{sale.buyerUsername}</p>
+        </div>
+        <span className="text-xs text-gray-400">{formatDate(sale.saleDate)}</span>
+      </div>
+      <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+        <div>
+          <p className="text-[10px] text-gray-400 uppercase">Achat</p>
+          <p className="text-sm font-medium text-gray-700">{formatCurrency(sale.purchasePrice)}</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-gray-400 uppercase">Vente</p>
+          <p className="text-sm font-medium text-gray-900">{formatCurrency(sale.salePrice)}</p>
+        </div>
+        <div>
+          <p className="text-[10px] text-gray-400 uppercase">Marge</p>
+          <p className="text-sm font-bold text-green-600">{formatCurrency(sale.margin)}</p>
+          <p className="text-[10px] text-gray-400">{sale.marginPercent.toFixed(1)}%</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function SalesPage() {
   return (
     <div>
@@ -44,19 +73,29 @@ export default function SalesPage() {
         <p className="text-sm text-gray-500 mt-1">Historique complet de vos ventes</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
         <StatsCard label="Nombre de ventes" value={String(mockSales.length)} icon={ShoppingCart} />
         <StatsCard label="CA total" value={formatCurrency(totalCA)} icon={DollarSign} />
         <StatsCard label="Marge nette totale" value={formatCurrency(totalMargin)} icon={TrendingUp} />
         <StatsCard label="Marge moyenne" value={`${avgMarginPct.toFixed(1)}%`} icon={Percent} />
       </div>
 
-      <DataTable data={mockSales as unknown as Record<string, unknown>[]} columns={columns as never} />
+      {/* Mobile: card list */}
+      <div className="md:hidden space-y-3">
+        {mockSales.map((sale, i) => (
+          <SaleCard key={i} sale={sale} />
+        ))}
+      </div>
+
+      {/* Desktop: table */}
+      <div className="hidden md:block">
+        <DataTable data={mockSales as unknown as Record<string, unknown>[]} columns={columns as never} />
+      </div>
 
       {/* Totals */}
-      <div className="mt-4 bg-white rounded-xl border border-gray-200 p-4 flex items-center justify-between">
+      <div className="mt-4 bg-white rounded-xl border border-gray-200 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <span className="text-sm font-medium text-gray-500">Totaux</span>
-        <div className="flex gap-8 text-sm">
+        <div className="flex flex-wrap gap-4 md:gap-8 text-sm">
           <div>CA: <span className="font-bold">{formatCurrency(totalCA)}</span></div>
           <div>Frais: <span className="font-bold text-red-500">{formatCurrency(totalFees)}</span></div>
           <div>Marge: <span className="font-bold text-green-600">{formatCurrency(totalMargin)}</span></div>

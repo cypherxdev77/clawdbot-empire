@@ -15,8 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr">
       <body className={`${inter.className} bg-gray-50 text-gray-900 antialiased`}>
         <Sidebar />
-        <main className="ml-64 min-h-screen">
-          <div className="p-6 lg:p-8 max-w-7xl">
+        <main className="md:ml-64 min-h-screen pb-20 md:pb-0">
+          <div className="p-4 md:p-6 lg:p-8 max-w-7xl">
             {children}
           </div>
         </main>
