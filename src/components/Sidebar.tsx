@@ -11,6 +11,7 @@ import {
   BarChart3,
   Calculator,
 } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
