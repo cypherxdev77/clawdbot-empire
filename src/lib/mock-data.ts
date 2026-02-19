@@ -26,6 +26,47 @@ export type Sale = {
   platform: string;
 };
 
+// Status labels & colors
+export const statusLabels = {
+  IN_STOCK: "En stock",
+  LISTED: "En vente",
+  SOLD: "Vendu"
+};
+
+export const statusColors = {
+  IN_STOCK: "text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/20",
+  LISTED: "text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/20",
+  SOLD: "text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/20"
+};
+
+// Chart data
+export const monthlyProfitData = [
+  { month: "Sept", profit: 980, sales: 1450 },
+  { month: "Oct", profit: 1240, sales: 1890 },
+  { month: "Nov", profit: 1580, sales: 2250 },
+  { month: "Déc", profit: 1890, sales: 2840 },
+  { month: "Jan", profit: 2190, sales: 3250 },
+  { month: "Fév", profit: 2450, sales: 3690 }
+];
+
+export const categoryROIData = [
+  { category: "Chaussures", roi: 68 },
+  { category: "Vestes", roi: 52 },
+  { category: "Robes", roi: 45 },
+  { category: "Sacs", roi: 42 },
+  { category: "Jeans", roi: 38 },
+  { category: "T-shirts", roi: 35 }
+];
+
+export const topBrandsData = [
+  { brand: "Nike", value: 28 },
+  { brand: "Zara", value: 22 },
+  { brand: "H&M", value: 18 },
+  { brand: "Adidas", value: 15 },
+  { brand: "The North Face", value: 12 },
+  { brand: "Autres", value: 5 }
+];
+
 export const mockProducts: Product[] = [
   {
     id: "p1",
