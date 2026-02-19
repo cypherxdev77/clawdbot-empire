@@ -12,8 +12,8 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat("fr-FR").format(date);
+export function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString('fr-FR');
 }
 
 export function formatPercent(value: number): string {
