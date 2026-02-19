@@ -18,40 +18,77 @@ const recentSalesColumns = [
   { key: 'productTitle', header: 'Produit' },
   { key: 'brand', header: 'Marque' },
   { key: 'saleDate', header: 'Date', render: (s: Sale) => formatDate(s.saleDate) },
-  { key: 'salePrice', header: 'Prix vente', render: (s: Sale) => formatCurrency(s.salePrice), className: 'text-right' as const },
-  { key: 'purchasePrice', header: 'Prix achat', render: (s: Sale) => formatCurrency(s.purchasePrice), className: 'text-right' as const },
-  { key: 'margin', header: 'Marge', render: (s: Sale) => (
-    <span className="font-semibold text-green-600">{formatCurrency(s.margin)}</span>
-  ), className: 'text-right' as const },
+  { 
+    key: 'salePrice', 
+    header: 'Prix vente', 
+    render: (s: Sale) => formatCurrency(s.salePrice),
+    align: 'right' as const
+  },
+  { 
+    key: 'margin', 
+    header: 'Marge', 
+    render: (s: Sale) => formatCurrency(s.margin),
+    align: 'right' as const
+  }
 ];
 
-export default function DashboardPage() {
+export default function HomePage() {
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-1">Vue d&apos;ensemble de votre activité de revente</p>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <StatsCard 
+          title="Articles en stock" 
+          value={inStock.toString()}
+          icon={<Package className="w-4 h-4" />}
+        />
+        <StatsCard 
+          title="En vente" 
+          value={listed.toString()}
+          icon={<Tag className="w-4 h-4" />}
+        />
+        <StatsCard 
+          title="Vendus ce mois" 
+          value={soldThisMonth.toString()}
+          icon={<CheckCircle className="w-4 h-4" />}
+          trend={{ value: 12, label: 'vs. mois dernier' }}
+        />
+        <StatsCard 
+          title="Marge totale" 
+          value={formatCurrency(totalMargin)}
+          icon={<TrendingUp className="w-4 h-4" />}
+          trend={{ value: 8, label: 'vs. mois dernier' }}
+        />
+        <StatsCard 
+          title="CA ce mois" 
+          value={formatCurrency(totalCA)}
+          icon={<DollarSign className="w-4 h-4" />}
+          trend={{ value: 15, label: 'vs. mois dernier' }}
+        />
+        <StatsCard 
+          title="Marge moyenne" 
+          value={formatCurrency(avgMargin)}
+          icon={<Percent className="w-4 h-4" />}
+        />
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
-        <StatsCard label="En stock" value={String(inStock)} icon={Package} />
-        <StatsCard label="En vente" value={String(listed)} icon={Tag} />
-        <StatsCard label="Vendus ce mois" value={String(soldThisMonth)} icon={CheckCircle} trend="+2 vs mois dernier" trendUp />
-        <StatsCard label="Marge totale" value={formatCurrency(totalMargin)} icon={TrendingUp} trend="+12%" trendUp />
-        <StatsCard label="CA total" value={formatCurrency(totalCA)} icon={DollarSign} />
-        <StatsCard label="Marge moyenne" value={formatCurrency(avgMargin)} icon={Percent} />
-      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-4">
+          <h2 className="text-lg font-medium mb-4">Évolution marge</h2>
+          <div className="h-[300px]">
+            <ProfitChart />
+          </div>
+        </div>
 
-      {/* Chart */}
-      <div className="mb-8">
-        <ProfitChart />
-      </div>
-
-      {/* Recent Sales */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Ventes récentes</h2>
-        <DataTable data={mockSales as unknown as Record<string, unknown>[]} columns={recentSalesColumns as never} />
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-4">
+          <h2 className="text-lg font-medium mb-4">Ventes récentes</h2>
+          <DataTable 
+            columns={recentSalesColumns}
+            data={mockSales.slice(-5)}
+            defaultSort={{ key: 'saleDate', direction: 'desc' }}
+          />
+        </div>
       </div>
     </div>
   );
